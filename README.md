@@ -29,7 +29,7 @@ Commencez par cloner ce dépôt sur votre machine locale :
 ```bash
 git clone https://github.com/dlsptm/discord-bot-assistant.git
 cd discord-bot-assistant
-cp .env.test .env
+cp .env.dev .env
 ```
 
 Ouvrez ensuite le fichier `.env` et remplissez les clés API nécessaires pour les services que vous utilisez.
