@@ -27,8 +27,8 @@ Avant de pouvoir utiliser le bot, assurez-vous d'avoir les éléments suivants :
 Commencez par cloner ce dépôt sur votre machine locale :
 
 ```bash
-git clone https://github.com/votre-utilisateur/votre-repository.git
-cd votre-repository
+git clone https://github.com/dlsptm/discord-bot-assistant.git
+cd discord-bot-assistant
 cp .env.test .env
 ```
 
