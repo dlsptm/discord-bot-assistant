@@ -3,7 +3,7 @@
 Ce projet consiste en un bot Discord développé en Python qui permet de réaliser trois fonctionnalités principales :
 
 1. **Rechercher les 10 vidéos les plus pertinentes sur un thème choisi.**
-2. **Rechercher les actualités récentes dans le domaine de la technologie.**
+2. **Récupération automatique des actualités technologiques chaque jour à 9h30.**
 3. **Utiliser un modèle d'intelligence artificielle personnel via Llama 3.2.**
 
 ## Prérequis
@@ -52,7 +52,9 @@ Le bot utilise un service pour rechercher les 10 vidéos les plus pertinentes su
 
 **2. Recherche des actualités technologiques**
 
-Le bot vous permet également de récupérer les dernières actualités sur le secteur de la technologie. Vous pouvez demander des nouvelles récentes et obtenir un résumé des articles les plus pertinents.
+Le bot vous permet d'accéder aux actualités technologiques récentes en les résumant pour vous.
+Un cron (planificateur) est configuré pour exécuter cette tâche tous les jours à 9h30, envoyant automatiquement les dernières nouvelles dans le canal Discord prévu à cet effet.
+Cette fonctionnalité permet de rester informé sans même avoir à interagir avec le bot.
 
 **3. Intégration de Llama 3.2 pour l'IA**
 
