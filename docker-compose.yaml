@@ -1,8 +1,6 @@
 services:
   bot_ollama:
-    build:
-      context: .  # Répertoire où se trouve ton Dockerfile.ollama
-      dockerfile: Dockerfile.ollama  # Spécifie le nom du Dockerfile personnalisé
+    image: ollama/ollama
     container_name: bot_ollama
     ports:
       - "11434:11434"

@@ -1,8 +1,0 @@
-# Utilise l'image de base d'Ollama
-FROM ollama/ollama
-
-# Installe curl
-RUN apt-get update && apt-get install -y curl
-
-# Définit le point d'entrée pour exécuter Ollama
-ENTRYPOINT ["/bin/bash", "/init_ollama.sh"]
