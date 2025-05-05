@@ -1,4 +1,4 @@
-from typing import Final
+from typing import Final, Optional
 
 from discord import Message
 
@@ -8,7 +8,7 @@ from utils.youtube import fetch_youtube_videos
 
 DISCORD_MAX_MESSAGE_LENGTH: Final[int] = 2000  # Limite de 2000 caractères par message Discord
 
-def get_response(user_input: str, channel: str) -> str:
+def get_response(user_input: str, channel: str) -> Optional[str]:
     lowered: str = user_input.strip().lower()
 
     if lowered.startswith("!ask ") or channel == 'chatbot':
@@ -21,9 +21,9 @@ def get_response(user_input: str, channel: str) -> str:
         return fetch_youtube_videos(lowered)
     elif channel == 'news':
         return fetch_articles()
-    elif lowered.startswith("hello"):
-        return 'Hello there'
-    return 'yes I am here'
+    elif lowered == "health check":
+        return 'Hello there ! I am here'
+    return None
 
 
 def split_message(response: str)->list:
@@ -56,13 +56,15 @@ async def send_message(message: Message, user_message: str, channel: str) -> Non
 
     try:
         response: str = get_response(user_message, channel)
-        messages = split_message(response)
 
-        for part in messages:
-            if is_private:
-                await message.author.send(part)
-            else:
-                await message.channel.send(part)
+        if response is not None:
+            messages = split_message(response)
+
+            for part in messages:
+                if is_private:
+                    await message.author.send(part)
+                else:
+                    await message.channel.send(part)
 
     except Exception as e:
         print(f"Error occurred: {e}")

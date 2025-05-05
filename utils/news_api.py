@@ -33,9 +33,7 @@ def fetch_articles_by_language(lang_code):
 
 
 def fetch_articles():
-    articles_fr = fetch_articles_by_language('fr')
-    articles_en = fetch_articles_by_language('en')
-    all_articles = articles_fr + articles_en
+    all_articles = fetch_articles_by_language('fr') + fetch_articles_by_language('en')
 
     results = []
     for article in all_articles:
