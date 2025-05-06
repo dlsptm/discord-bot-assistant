@@ -5,6 +5,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime
 from utils import news_api
 from utils.functions import *
+from apscheduler.triggers.cron import CronTrigger
+from pytz import timezone
 
 load_dotenv()
 
@@ -17,10 +19,11 @@ intents : Intents = Intents.default()
 intents.message_content: bool = True
 client : Client = Client(intents=intents)
 
-scheduler = AsyncIOScheduler()
+paris = timezone('Europe/Paris')
+scheduler = AsyncIOScheduler(timezone=paris)
 
 
-@scheduler.scheduled_job('interval', hours=9, minutes=30)
+@scheduler.scheduled_job(CronTrigger(hour=9, minute=30, timezone=paris))
 async def send_daily_news():
     today = datetime.today()
     channel_id = NEWS_CHANNEL_ID

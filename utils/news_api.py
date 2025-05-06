@@ -1,6 +1,7 @@
 import os
 from typing import Final
 from datetime import date, timedelta
+from unicodedata import category
 
 from newsapi import NewsApiClient
 from dotenv import load_dotenv
@@ -17,17 +18,12 @@ yesterday_str = yesterday.isoformat()  # Format: YYYY-MM-DD
 
 
 def fetch_articles_by_language(lang_code):
-    sources_data = newsapi.get_sources(language=lang_code)
-    source_ids = [source['id'] for source in sources_data['sources']]
-    sources_str = ','.join(source_ids)
-
     articles = newsapi.get_everything(
-        q='tech',
+        q='technology OR tech OR programming OR python OR javascript OR symfony OR php OR coding',
         from_param=yesterday_str,
         to=yesterday_str,
         language=lang_code,
         sort_by='relevancy',
-        sources=sources_str
     )
     return articles['articles']
 
