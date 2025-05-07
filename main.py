@@ -25,7 +25,7 @@ scheduler = AsyncIOScheduler(timezone=paris)
 
 @scheduler.scheduled_job(CronTrigger(hour=9, minute=30, timezone=paris))
 async def send_daily_news():
-    today = datetime.today()
+    today = datetime.now(paris)
     channel_id = NEWS_CHANNEL_ID
     channel = client.get_channel(channel_id)
     if channel:
@@ -38,7 +38,8 @@ async def send_daily_news():
 @client.event
 async def on_ready() -> None:
     print(f'{client.user} is now running')
-    scheduler.start()
+    if not scheduler.running:
+        scheduler.start()
 
 
 @client.event
