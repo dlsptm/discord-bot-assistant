@@ -1,7 +1,5 @@
 from typing import Final, Optional
-
 from discord import Message
-
 from utils.news_api import fetch_articles
 from utils.ollama import call_ollama
 from utils.youtube import fetch_youtube_videos
@@ -69,3 +67,5 @@ async def send_message(message: Message, user_message: str, channel: str) -> Non
     except Exception as e:
         print(f"Error occurred: {e}")
         await message.channel.send(f"An error occurred while processing your request. {e}")
+
+

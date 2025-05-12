@@ -1,15 +1,12 @@
 import os
+from typing import Final
 from dotenv import load_dotenv
-from discord import Intents, Client, Message
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from datetime import datetime
+from discord import Intents, Message
+from discord.ext import tasks, commands
 from utils import news_api
-from utils.functions import *
-from apscheduler.triggers.cron import CronTrigger
-from pytz import timezone
+from utils.functions import split_message, send_message
 
 load_dotenv()
-
 
 DISCORD_TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
 GOOGLE_TOKEN: Final[str] = os.getenv('GOOGLE_TOKEN')
@@ -17,29 +14,31 @@ NEWS_CHANNEL_ID: Final[int] = int(os.getenv('NEWS_CHANNEL_ID'))
 
 intents : Intents = Intents.default()
 intents.message_content: bool = True
-client : Client = Client(intents=intents)
-
-paris = timezone('Europe/Paris')
-scheduler = AsyncIOScheduler(timezone=paris)
-
-
-@scheduler.scheduled_job(CronTrigger(hour=9, minute=30, timezone=paris))
-async def send_daily_news():
-    today = datetime.now(paris)
-    channel_id = NEWS_CHANNEL_ID
-    channel = client.get_channel(channel_id)
-    if channel:
-        news_response = news_api.fetch_articles()
-        messages = [f"# 📢 VOTRE NEWS DU JOUR {today.strftime('%d-%m-%Y')}"] + split_message(news_response)
-        for msg in messages:
-            await channel.send(msg)
-
+client = commands.Bot(command_prefix="!", intents=intents)
 
 @client.event
-async def on_ready() -> None:
-    print(f'{client.user} is now running')
-    if not scheduler.running:
-        scheduler.start()
+async def on_ready():
+    print(f'✅ {client.user} is now running.')
+    if not send_daily_news.is_running():
+        send_daily_news.start()
+
+
+@tasks.loop(hours=24)
+async def send_daily_news():
+    channel = client.get_channel(NEWS_CHANNEL_ID)
+    if channel:
+        news_response = news_api.fetch_articles()
+        messages = split_message(news_response)
+        for msg in messages:
+            await channel.send(msg)
+    else:
+        print("❌ Channel not found.")
+
+
+@send_daily_news.before_loop
+async def before():
+    print('waiting...')
+    await client.wait_until_ready()
 
 
 @client.event
@@ -54,10 +53,10 @@ async def on_message(message: Message) -> None:
 
 
 def main():
-    client.run(token=DISCORD_TOKEN)
+    if not DISCORD_TOKEN or not GOOGLE_TOKEN:
+        raise ValueError("DISCORD_TOKEN or GOOGLE_TOKEN not found in environment variables.")
+    client.run(DISCORD_TOKEN)
 
 
 if __name__ == '__main__':
-    if not DISCORD_TOKEN or not GOOGLE_TOKEN:
-        raise ValueError("DISCORD_TOKEN or GOOGLE_TOKEN not found in environment variables.")
     main()
