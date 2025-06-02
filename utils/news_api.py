@@ -13,11 +13,12 @@ NEWS_API_KEY: Final[str] = os.getenv('NEWS_API_KEY')
 # Init client
 newsapi = NewsApiClient(api_key=NEWS_API_KEY)
 
-yesterday = date.today() - timedelta(days=1)
-yesterday_str = yesterday.isoformat()  # Format: YYYY-MM-DD
 sent_articles = defaultdict(list)
 
 def fetch_articles_by_language(lang_code):
+    yesterday = date.today() - timedelta(days=1)
+    yesterday_str = yesterday.isoformat()  # Format: YYYY-MM-DD
+
     articles = newsapi.get_everything(
         q='technology OR tech OR programming OR python OR javascript OR symfony OR php OR coding',
         from_param=yesterday_str,
